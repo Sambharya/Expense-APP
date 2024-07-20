@@ -7,13 +7,13 @@ dotenv.config();
 
 const connectDb = async () => {
   try {
-    // Remove unsupported options
+    // Connect to MongoDB
     const conn = await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    // Set `strictQuery` option if you want to prepare for Mongoose 7.x
+    // Set `strictQuery` option to suppress warning
     mongoose.set('strictQuery', false);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`.bgCyan.white);
