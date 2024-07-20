@@ -5,37 +5,38 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const connectDb = require("./config/connectDb");
 const path = require('path');
-// config dot env file
+
+// Config dot env file
 dotenv.config();
 
-//databse call
+// Database call
 connectDb();
 
-//rest object
+// Rest object
 const app = express();
 
-//middlewares
+// Middlewares
 app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-//routes
+// Routes
 app.use("/api/v1/users", require("./routes/userRoute"));
+app.use("/api/v1/transections", require("./routes/transectionRoutes"));
 
-//transection routes
-app.use("/api/v1/transections",require("./routes/transectionRoutes"));
+// Static files
+const buildPath = path.join(__dirname, './client/build');
+console.log(`Serving static files from: ${buildPath}`);
+app.use(express.static(buildPath));
 
-//static files
- app.use(express.static(path.join(__dirname,'./client/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
 
- app.get('*',function(req,res){
-  res.sendFile(path.join(__dirname,'./client/build/index.html'));
- });
+// Port
+const PORT = process.env.PORT || 8080;
 
-//port
-const PORT = 8080 || process.env.PORT;
-
-//listen server
+// Listen server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
